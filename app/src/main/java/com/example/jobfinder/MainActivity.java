@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < appNames.length; i++) {
                 if(userName.getText().toString().toLowerCase().equals(appNames[i].toLowerCase())) {
                     if(password.getText().toString().equals(appPass[i])) {
-                        startActivity(new Intent(this, BusinessListActivity.class));
+                        startActivity(new Intent(MainActivity.this, BusinessListActivity.class));
                         break;
                     }
                     break;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < busiNames.length; i++) {
                 if(userName.getText().toString().toLowerCase().equals(busiNames[i].toLowerCase())) {
                     if(password.getText().toString().equals(busiPass[i])) {
-                        startActivity(new Intent(this, ApplicantList.class));
+                        startActivity(new Intent(MainActivity.this, ApplicantList.class));
                         break;
                     }
                     break;
