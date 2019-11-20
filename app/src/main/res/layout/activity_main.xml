@@ -16,9 +16,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="-2dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         app:srcCompat="@color/colorPrimaryDark" />
 
@@ -101,7 +101,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:layout_below="@id/passWord"

@@ -9,11 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".BusinessActivity"></activity>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".BusinessListActivity"/>
-        <activity android:name=".ApplicantList"/>
-        <activity android:name=".UserActivity"/>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".BusinessActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".BusinessListActivity" />
+        <activity android:name=".ApplicantList" />
+        <activity android:name=".UserActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,5 +23,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
