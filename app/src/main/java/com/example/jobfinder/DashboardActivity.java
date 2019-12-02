@@ -41,8 +41,11 @@ public class DashboardActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
             switch(menuItem.getItemId()){
                 case R.id.nav_profile:
-                        startActivity(new Intent(DashboardActivity.this, UserActivity.class));
-                        break;
+                    startActivity(new Intent(DashboardActivity.this, UserActivity.class));
+                    break;
+                case R.id.nav_users:
+                    startActivity(new Intent(DashboardActivity.this, BusinessListActivity.class));
+                    break;
             }
             return false;
         });
