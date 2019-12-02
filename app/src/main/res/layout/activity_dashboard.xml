@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/graylight"
     android:orientation="vertical"
-    tools:context=".UserActivity">
+    tools:context=".DashboardActivity">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="405dp">
+        android:layout_height="360dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="320dp"
             android:background="@drawable/gradientbackground"
             android:orientation="vertical">
 
@@ -24,7 +24,7 @@
                 android:layout_width="158dp"
                 android:layout_height="159dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="20dp"
                 android:src="@drawable/ic_account_box_black_24dp" />
 
             <TextView
@@ -32,8 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25dp"
-                android:text="Scott Honaker"
+                android:layout_marginTop="15dp"
+                android:text="User"
                 android:textColor="#fff"
                 android:textSize="35sp"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
             android:layout_width="300dp"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="275dp"
+            android:layout_marginTop="250dp"
             app:cardBackgroundColor="@color/cardview_light_background"
             app:cardCornerRadius="25dp"
             app:cardElevation="40dp">
@@ -72,20 +72,11 @@
                         android:id="@+id/user_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Graduated from the University of Texas at El Paso. Fluent in Java, Python, PHP and Javascript."
+                        android:text="Example"
+                        android:paddingLeft="10dp"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:textStyle="italic" />
-
-                    <TextView
-                        android:id="@+id/user_edit1"
-                        android:layout_width="68dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:paddingRight="15dp"
-                        android:text="edit"
-                        android:textColor="@color/startblue"
-                        android:textSize="20dp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -97,13 +88,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="45dp">
+        android:layout_marginTop="15dp">
         <LinearLayout
             android:orientation="horizontal"
             android:paddingLeft="25dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageView
                 android:id="@+id/user_mail"
                 android:layout_width="36dp"
@@ -116,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:text=" generic_email@g..."
+                android:text=" Generic Email"
                 android:textSize="19dp" />
 
             <TextView
@@ -225,8 +215,18 @@
                 android:textColor="@color/startblue"
                 android:textSize="22dp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/signout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="10dp"
+            android:text="Sign Out"
+            android:textSize="15dp" />
+
         <LinearLayout
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:paddingLeft="25dp"
             android:layout_width="match_parent"
@@ -235,7 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
-                android:paddingTop="20dp"
+                android:paddingTop="15dp"
                 android:text="Account: "
                 android:layout_gravity="center|left"
                 android:textColor="@color/startblue"/>
@@ -243,24 +243,20 @@
                 android:id="@+id/profile_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="15dp"
                 android:layout_gravity="center"
                 android:textSize="15dp"
                 android:textColor="@color/endblue"
                 android:text="  ..." />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/signout"
-            android:paddingTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign Out"
-            android:textSize="20dp"
-            android:layout_gravity="center"/>
-
 
     </LinearLayout>
 
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/endblue"
+        app:menu="@menu/menu_nav" />
 </LinearLayout>
