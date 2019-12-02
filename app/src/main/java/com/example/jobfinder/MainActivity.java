@@ -54,13 +54,10 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, RegisterActivity.class));});
 
-
-
         String[] appNames = new String[] {"Scott", "Jorge"};
         String[] busiNames = new String[] {"Cheon", "ADP"};
         String[] appPass = new String[] {"hello", "123A"};
         String[] busiPass = new String[] {"cs4330", "Pass"};
-
 
         login.setOnClickListener(v -> {
             String email = userName.getText().toString();
@@ -102,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
                             DatabaseReference reference = dataBase.getReference("Users");
                             reference.child(uid).setValue(hashMap);
-
 
                             //user is logged in
                             startActivity(new Intent(MainActivity.this,DashboardActivity.class) );

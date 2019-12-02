@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.internal.NavigationMenuView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,6 +26,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     Button signOut;
 
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +36,21 @@ public class DashboardActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userN = findViewById(R.id.profile_email);
         signOut = findViewById(R.id.signout);
+        navView = findViewById(R.id.dashboardNav);
+
+        navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
+            switch(menuItem.getItemId()){
+                case R.id.nav_profile:
+                        startActivity(new Intent(DashboardActivity.this, UserActivity.class));
+                        break;
+            }
+            return false;
+        });
 
         signOut.setOnClickListener(view ->{
             firebaseAuth.signOut();
             checkUserStatus();
-
         });
-
-
     }
 
     private void checkUserStatus(){
