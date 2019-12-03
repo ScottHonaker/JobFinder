@@ -24,12 +24,10 @@ public class ApplicantList extends AppCompatActivity {
         ListView listView = findViewById(R.id.appList);
         listView.setAdapter(topicsAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                String topic = (String) parent.getItemAtPosition(position);
-                startActivity(new Intent(ApplicantList.this, ProfileActivity.class));
-                Toast.makeText(ApplicantList.this, topic, Toast.LENGTH_SHORT).show();
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String topic = (String) parent.getItemAtPosition(position);
+            startActivity(new Intent(ApplicantList.this, ProfileActivity.class));
+            Toast.makeText(ApplicantList.this, topic, Toast.LENGTH_SHORT).show();
         });
     }
 }

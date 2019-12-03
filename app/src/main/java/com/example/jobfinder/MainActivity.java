@@ -78,44 +78,38 @@ public class MainActivity extends AppCompatActivity {
     private void loginUser(String email, String passw) {
         pd.show();
         mAuth.signInWithEmailAndPassword(email, passw)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            pd.dismiss();
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String email = user.getEmail();
-                            String uid = user.getUid();
-                            //store user info into data base using hashmap
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            hashMap.put("email", email);
-                            hashMap.put("uid", uid);
-                            //////////////////////
-                            hashMap.put("name", "");
-                            hashMap.put("phone", "");
-                            hashMap.put("image", "");
-                            /////database
-                            FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
-                            DatabaseReference reference = dataBase.getReference("Users");
-                            reference.child(uid).setValue(hashMap);
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        pd.dismiss();
+                        // Sign in success, update UI with the signed-in user's information
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String email1 = user.getEmail();
+                        String uid = user.getUid();
+                        //store user info into data base using hashmap
+                        HashMap<Object, String> hashMap = new HashMap<>();
+                        hashMap.put("email", email1);
+                        hashMap.put("uid", uid);
+                        //////////////////////
+                        hashMap.put("name", "");
+                        hashMap.put("phone", "");
+                        hashMap.put("image", "");
+                        /////database
+                        FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = dataBase.getReference("Users");
+                        reference.child(uid).setValue(hashMap);
 
-                            //user is logged in
-                            startActivity(new Intent(MainActivity.this,DashboardActivity.class) );
-                            finish();
-                        } else {
-                            pd.dismiss();
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        //user is logged in
+                        startActivity(new Intent(MainActivity.this,DashboardActivity.class) );
+                        finish();
+                    } else {
+                        pd.dismiss();
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                }).addOnFailureListener(e -> {
+                    pd.dismiss();
+                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

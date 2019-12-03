@@ -19,7 +19,7 @@ public class UserActivity extends AppCompatActivity {
         navView = findViewById(R.id.dashboardNav);
         navView.setSelectedItemId(R.id.nav_profile);
 
-        navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
+        navView.setOnNavigationItemSelectedListener(menuItem -> {
             switch(menuItem.getItemId()){
                 case R.id.nav_home:
                     startActivity(new Intent(UserActivity.this, DashboardActivity.class));

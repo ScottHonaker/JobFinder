@@ -80,43 +80,37 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser(String email, String password) {
         progressDialog.show();
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String email = user.getEmail();
-                            String uid = user.getUid();
-                            //store user info into data base using hashmap
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            hashMap.put("email", email);
-                            hashMap.put("uid", uid);
-                            //////////////////////
-                            hashMap.put("name", "");
-                            hashMap.put("phone", "");
-                            hashMap.put("image", "");
-                            /////database
-                            FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
-                            DatabaseReference reference = dataBase.getReference("Users");
-                            reference.child(uid).setValue(hashMap);
-                            Toast.makeText(RegisterActivity.this,"Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent( RegisterActivity.this,DashboardActivity.class));
-                            finish();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            progressDialog.dismiss();
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        progressDialog.dismiss();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        String email1 = user.getEmail();
+                        String uid = user.getUid();
+                        //store user info into data base using hashmap
+                        HashMap<Object, String> hashMap = new HashMap<>();
+                        hashMap.put("email", email1);
+                        hashMap.put("uid", uid);
+                        //////////////////////
+                        hashMap.put("name", "");
+                        hashMap.put("phone", "");
+                        hashMap.put("image", "");
+                        /////database
+                        FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = dataBase.getReference("Users");
+                        reference.child(uid).setValue(hashMap);
+                        Toast.makeText(RegisterActivity.this,"Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent( RegisterActivity.this,DashboardActivity.class));
+                        finish();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(RegisterActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(RegisterActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
 
-            }
-        });
+                });
     }
 
 

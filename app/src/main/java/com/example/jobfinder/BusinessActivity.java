@@ -19,7 +19,7 @@ public class BusinessActivity extends AppCompatActivity {
         setContentView(R.layout.activity_business);
         navView = findViewById(R.id.dashboardNav);
 
-        navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
+        navView.setOnNavigationItemSelectedListener(menuItem -> {
             switch(menuItem.getItemId()){
                 case R.id.nav_profile:
                     startActivity(new Intent(BusinessActivity.this, UserActivity.class));

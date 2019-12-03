@@ -3,7 +3,6 @@ package com.example.jobfinder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,18 +28,16 @@ public class BusinessListActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.busiList);
         listView.setAdapter(topicsAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                String topic = (String) parent.getItemAtPosition(position);
-                startActivity(new Intent(BusinessListActivity.this, BusinessActivity.class));
-                Toast.makeText(BusinessListActivity.this, topic, Toast.LENGTH_SHORT).show();
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String topic = (String) parent.getItemAtPosition(position);
+            startActivity(new Intent(BusinessListActivity.this, BusinessActivity.class));
+            Toast.makeText(BusinessListActivity.this, topic, Toast.LENGTH_SHORT).show();
         });
 
         navView = findViewById(R.id.dashboardNav);
         navView.setSelectedItemId(R.id.nav_users);
 
-        navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
+        navView.setOnNavigationItemSelectedListener(menuItem -> {
             switch(menuItem.getItemId()){
                 case R.id.nav_profile:
                     startActivity(new Intent(BusinessListActivity.this, UserActivity.class));

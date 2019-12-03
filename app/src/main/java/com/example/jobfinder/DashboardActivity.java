@@ -137,9 +137,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setView(input);
         alertDialog.setPositiveButton("YES",
                 (dialog, which) -> {
-                    userSocial.setText(input.getText().toString());
-                });
-
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        userSocial.setText(input.getText().toString());
+                    }
+        });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
@@ -158,9 +161,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setView(input);
         alertDialog.setPositiveButton("YES",
                 (dialog, which) -> {
-                    userMessage.setText(input.getText().toString());
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        userMessage.setText(input.getText().toString());
+                    }
                 });
-
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
@@ -179,9 +185,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setView(input);
         alertDialog.setPositiveButton("YES",
                 (dialog, which) -> {
-                    userNumber.setText(input.getText().toString());
-                });
-
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        userNumber.setText(input.getText().toString());
+                    }
+        });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
@@ -200,9 +209,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setView(input);
         alertDialog.setPositiveButton("YES",
                 (dialog, which) -> {
-                    userEmail.setText(input.getText().toString());
-                });
-
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        userEmail.setText(input.getText().toString());
+                    }
+        });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
@@ -217,7 +229,6 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(new Intent(DashboardActivity.this, MainActivity.class));
             finish();
         }
-
     }
 
     private void descriptionEdit(){
@@ -233,9 +244,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setView(input);
         alertDialog.setPositiveButton("YES",
                 (dialog, which) -> {
-                    userDesc.setText(input.getText().toString());
-                });
-
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        userDesc.setText(input.getText().toString());
+                    }
+        });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
