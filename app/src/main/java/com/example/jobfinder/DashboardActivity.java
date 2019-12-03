@@ -74,6 +74,10 @@ public class DashboardActivity extends AppCompatActivity {
             descriptionEdit();
         });
 
+        userDesc.setOnClickListener(enlarge -> {
+            viewDescription();
+        });
+
         editEmail = findViewById(R.id.user_edit2);
         userEmail = findViewById(R.id.user_email);
         editEmail.setOnClickListener(edit ->{
@@ -102,6 +106,22 @@ public class DashboardActivity extends AppCompatActivity {
             firebaseAuth.signOut();
             checkUserStatus();
         });
+    }
+
+    private void viewDescription() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
+        alertDialog.setTitle("Description View");
+
+        final TextView view = new TextView(DashboardActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        view.setLayoutParams(lp);
+        alertDialog.setView(view);
+        view.setText(userDesc.getText().toString());
+        alertDialog.setPositiveButton("OK",
+                (dialog, which) -> {});
+        alertDialog.show();
     }
 
     private void socialEdit() {

@@ -66,7 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
                 //set error messages
                 mUserEmail.setError("Invalid Email");
                 mUserEmail.setFocusable(true);
-
             }
             else if(password.length()<4){
                 mPass.setError("Invalid Password Length");
@@ -80,14 +79,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String email, String password) {
         progressDialog.show();
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
-
                             FirebaseUser user = mAuth.getCurrentUser();
                             String email = user.getEmail();
                             String uid = user.getUid();
@@ -103,10 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
                             DatabaseReference reference = dataBase.getReference("Users");
                             reference.child(uid).setValue(hashMap);
-
-
-
-
                             Toast.makeText(RegisterActivity.this,"Registered...\n"+user.getEmail(), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent( RegisterActivity.this,DashboardActivity.class));
                             finish();
