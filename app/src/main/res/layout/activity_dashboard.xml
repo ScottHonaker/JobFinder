@@ -82,6 +82,16 @@
                             android:textSize="18dp"
                             android:textStyle="italic" />
 
+                        <TextView
+                            android:id="@+id/user_edit1"
+                            android:layout_width="68dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:paddingRight="15dp"
+                            android:text="edit"
+                            android:textColor="@color/startblue"
+                            android:textSize="20dp" />
+
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

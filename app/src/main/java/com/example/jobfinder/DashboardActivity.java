@@ -2,6 +2,7 @@ package com.example.jobfinder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenu;
@@ -27,6 +30,9 @@ public class DashboardActivity extends AppCompatActivity {
     Button signOut;
 
     BottomNavigationView navView;
+
+    TextView editDesc;
+    TextView userDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,10 @@ public class DashboardActivity extends AppCompatActivity {
             return false;
         });
 
-        signOut.setOnClickListener(view ->{
-            firebaseAuth.signOut();
-            checkUserStatus();
+        editDesc = findViewById(R.id.user_edit1);
+        userDesc = findViewById(R.id.user_description);
+        editDesc.setOnClickListener(edit ->{
+            descriptionEdit();
         });
     }
 
@@ -67,6 +74,34 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
     }
+
+    private void descriptionEdit(){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
+            alertDialog.setTitle("Description");
+            alertDialog.setMessage("Enter a new description");
+
+            final EditText input = new EditText(DashboardActivity.this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialog.setView(input);
+            alertDialog.setPositiveButton("YES",
+                    (dialog, which) -> {
+                        userDesc.setText(input.getText().toString());
+                    });
+
+            alertDialog.setNegativeButton("NO",
+                    (dialog, which) -> dialog.cancel());
+            alertDialog.show();
+
+
+        signOut.setOnClickListener(view ->{
+            firebaseAuth.signOut();
+            checkUserStatus();
+        });
+    }
+
     @Override
     protected void onStart(){
         checkUserStatus();
