@@ -37,7 +37,7 @@ public class DashboardActivity extends AppCompatActivity {
         userN = findViewById(R.id.profile_email);
         signOut = findViewById(R.id.signout);
         navView = findViewById(R.id.dashboardNav);
-
+        navView.setSelectedItemId(R.id.nav_home);
         navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
             switch(menuItem.getItemId()){
                 case R.id.nav_profile:

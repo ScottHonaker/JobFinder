@@ -17,6 +17,7 @@ public class UserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user);
 
         navView = findViewById(R.id.dashboardNav);
+        navView.setSelectedItemId(R.id.nav_profile);
 
         navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) menuItem -> {
             switch(menuItem.getItemId()){
