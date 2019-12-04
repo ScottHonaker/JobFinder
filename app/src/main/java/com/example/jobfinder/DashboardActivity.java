@@ -1,24 +1,18 @@
 package com.example.jobfinder;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenuView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -76,8 +70,6 @@ public class DashboardActivity extends AppCompatActivity {
         nameT = findViewById(R.id.user_name);
         emailT = findViewById(R.id.user_email);
 
-
-
         Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -105,26 +97,18 @@ public class DashboardActivity extends AppCompatActivity {
                         Picasso.get().load(image).into(avatarImage);
                     }
                     catch (Exception e){
+                        //Picasso.get().load(R.drawable.ic_account_box_black_24dp).into(avatarImage);
                     }
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
-
-
-
         userMailB = findViewById(R.id.profile_email);
-
-
-
         signOut = findViewById(R.id.signout);
-
         navView = findViewById(R.id.dashboardNav);
         navView.setSelectedItemId(R.id.nav_home);
         navView.setOnNavigationItemSelectedListener(menuItem -> {
@@ -140,7 +124,6 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         editDesc = findViewById(R.id.user_edit1);
-
         userDesc = findViewById(R.id.user_description);
         editDesc.setOnClickListener(edit ->{
             descriptionEdit();
@@ -149,11 +132,9 @@ public class DashboardActivity extends AppCompatActivity {
         userDesc.setOnClickListener(enlarge -> {
             viewDescription();
         });
-/////////////////////////////////////////////////////
         nameT.setOnClickListener(edit ->{
             nameEdit();
         });
-//////////////////////////////////////////////////////
         editEmail = findViewById(R.id.user_edit2);
         emailT = findViewById(R.id.user_email);
         editEmail.setOnClickListener(edit ->{
