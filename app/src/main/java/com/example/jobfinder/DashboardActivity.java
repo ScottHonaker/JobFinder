@@ -36,10 +36,13 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
+    //Profile picture
     ImageView avatarImage;
+
+    //user name, email, phone
     TextView nameT,emailT,phoneT;
 
-
+    //Account: email display
     TextView userMailB;
 
     Button signOut;
@@ -50,7 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
     TextView userDesc;
 
     TextView editEmail;
-    
+
     TextView editNumber;
 
     TextView editMessage;
@@ -72,7 +75,8 @@ public class DashboardActivity extends AppCompatActivity {
         avatarImage = findViewById(R.id.user_pic);
         nameT = findViewById(R.id.user_name);
         emailT = findViewById(R.id.user_email);
-        phoneT = findViewById(R.id.user_cell);
+
+
 
         Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
         query.addValueEventListener(new ValueEventListener() {
@@ -85,15 +89,15 @@ public class DashboardActivity extends AppCompatActivity {
                     String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
 
-                    nameT.setText(name);
+                    if(ds.child("name").getValue() != "") {
+                        nameT.setText(name);
+                    }
                     emailT.setText(email);
                     phoneT.setText(phone);
                     try{
                         Picasso.get().load(image).into(avatarImage);
-
                     }
                     catch (Exception e){
-
                         Picasso.get().load(R.drawable.ic_account_box_black_24dp).into(avatarImage);
 
                     }
@@ -283,17 +287,6 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void checkUserStatus(){
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-            userMailB.setText(user.getEmail());
-        }
-        else{
-            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
-            finish();
-        }
-    }
-
     private void descriptionEdit(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
         alertDialog.setTitle("Description");
@@ -316,6 +309,17 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
+    }
+
+    private void checkUserStatus(){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            userMailB.setText(user.getEmail());
+        }
+        else{
+            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @Override

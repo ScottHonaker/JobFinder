@@ -31,15 +31,18 @@
                     android:layout_marginTop="20dp"
                     android:src="@drawable/ic_account_box_black_24dp" />
 
+
                 <TextView
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
+                    android:text="Enter Name"
                     android:textColor="#fff"
                     android:textSize="35sp"
                     android:textStyle="bold" />
+
 
             </LinearLayout>
 
@@ -151,6 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
+                    android:text="000-000-0000"
                     android:textSize="19dp" />
 
                 <TextView
@@ -182,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
-                    android:text=" Message Me ;)"
+                    android:text=" Message Me "
                     android:textSize="19dp" />
 
                 <TextView
@@ -214,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
-                    android:text="Add Me Senpai!"
+                    android:text="Add Social Media!"
                     android:textSize="19dp" />
 
                 <TextView
