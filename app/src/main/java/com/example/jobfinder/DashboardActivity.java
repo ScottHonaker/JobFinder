@@ -89,17 +89,22 @@ public class DashboardActivity extends AppCompatActivity {
                     String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
 
-                    if(ds.child("name").getValue() != "") {
+                    if(!ds.child("name").getValue().toString().matches("")) {
                         nameT.setText(name);
                     }
-                    emailT.setText(email);
-                    phoneT.setText(phone);
+                    if(!ds.child("email").getValue().toString().matches("")) {
+                        emailT.setText(email);
+                    }
+                    if(!ds.child("phone").getValue().toString().matches("")) {
+                        phoneT.setText(phone);
+                    }
+                    if(!ds.child("image").getValue().toString().matches("")) {
+
+                    }
                     try{
                         Picasso.get().load(image).into(avatarImage);
                     }
                     catch (Exception e){
-                        Picasso.get().load(R.drawable.ic_account_box_black_24dp).into(avatarImage);
-
                     }
                 }
 
@@ -144,7 +149,11 @@ public class DashboardActivity extends AppCompatActivity {
         userDesc.setOnClickListener(enlarge -> {
             viewDescription();
         });
-
+/////////////////////////////////////////////////////
+        nameT.setOnClickListener(edit ->{
+            nameEdit();
+        });
+//////////////////////////////////////////////////////
         editEmail = findViewById(R.id.user_edit2);
         emailT = findViewById(R.id.user_email);
         editEmail.setOnClickListener(edit ->{
@@ -304,8 +313,58 @@ public class DashboardActivity extends AppCompatActivity {
                         dialog.cancel();
                     } else {
                         userDesc.setText(input.getText().toString());
+
                     }
         });
+        alertDialog.setNegativeButton("NO",
+                (dialog, which) -> dialog.cancel());
+        alertDialog.show();
+    }
+    ////////////////////////////////////////////////////////////////
+   /* private void pictureEdit(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
+        alertDialog.setTitle("Description");
+        alertDialog.setMessage("Enter a new description");
+
+        final EditText input = new EditText(DashboardActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setPositiveButton("YES",
+                (dialog, which) -> {
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        avatarImage.setText(input.getText().toString());
+
+                    }
+                });
+        alertDialog.setNegativeButton("NO",
+                (dialog, which) -> dialog.cancel());
+        alertDialog.show();
+    }*/
+    private void nameEdit(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
+        alertDialog.setTitle("Name");
+        alertDialog.setMessage("Enter a new Name");
+
+        final EditText input = new EditText(DashboardActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setPositiveButton("YES",
+                (dialog, which) -> {
+                    if(input.getText().toString().matches("")){
+                        dialog.cancel();
+                    } else {
+                        nameT.setText(input.getText().toString());
+
+                    }
+                });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
