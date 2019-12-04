@@ -1,24 +1,34 @@
 package com.example.jobfinder;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import androidx.activity.OnBackPressedDispatcherOwner;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenuView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +37,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.security.Key;
+import java.util.HashMap;
+
+import static com.google.firebase.storage.FirebaseStorage.getInstance;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -35,6 +52,25 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseUser user;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    //storage
+    StorageReference storageReference;
+
+    //path where images of user profile and cover will be stored
+    String storagePath = "Users_Profile_Cover_Imags/";
+
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+    private static final int IMAGE_PICK_GALLERY_CODE = 300;
+    private static final int IMAGE_PICK_CAMERA_CODE = 400;
+    //ARRAYS OF PERMISSIONS TO BE REQUESTED
+    String cameraPermissions[];
+    String storagePermissions[];
+
+    //uri of picked image
+    Uri image_uri;
+
+    //for checking profile or cover photo
+    String profileOrCoverPhoto;
 
     //Profile picture
     ImageView avatarImage;
@@ -71,6 +107,11 @@ public class DashboardActivity extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+        storageReference = getInstance().getReference();
+
+        //init arrays of permissions
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissions= new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         avatarImage = findViewById(R.id.user_pic);
         nameT = findViewById(R.id.user_name);
@@ -116,12 +157,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         userMailB = findViewById(R.id.profile_email);
-
-
 
         signOut = findViewById(R.id.signout);
 
@@ -151,7 +187,11 @@ public class DashboardActivity extends AppCompatActivity {
         });
 /////////////////////////////////////////////////////
         nameT.setOnClickListener(edit ->{
-            nameEdit();
+            nameEdit("name");
+        });
+
+        avatarImage.setOnClickListener(edit ->{
+            pictureEdit();
         });
 //////////////////////////////////////////////////////
         editEmail = findViewById(R.id.user_edit2);
@@ -163,7 +203,7 @@ public class DashboardActivity extends AppCompatActivity {
         editNumber = findViewById(R.id.user_edit3);
         phoneT = findViewById(R.id.user_cell);
         editNumber.setOnClickListener(edit -> {
-            numberEdit();
+            numberEdit("phone");
         });
 
         editMessage = findViewById(R.id.user_edit4);
@@ -182,6 +222,25 @@ public class DashboardActivity extends AppCompatActivity {
             firebaseAuth.signOut();
             checkUserStatus();
         });
+    }
+
+    private boolean checkStoragePermission(){
+        boolean result = ContextCompat.checkSelfPermission(DashboardActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission(){
+        requestPermissions(storagePermissions,STORAGE_REQUEST_CODE);
+    }
+    private boolean checkCameraPermission(){
+        boolean result = ContextCompat.checkSelfPermission(DashboardActivity.this,Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1 = ContextCompat.checkSelfPermission(DashboardActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission(){
+        requestPermissions(cameraPermissions,CAMERA_REQUEST_CODE);
     }
 
     private void viewDescription() {
@@ -248,12 +307,12 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void numberEdit() {
+    private void numberEdit(String key) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
-        alertDialog.setTitle("Phone Number");
-        alertDialog.setMessage("Enter a new phone number");
+        alertDialog.setTitle("Phone");
+        alertDialog.setMessage("Enter a new phone");
 
-        final EditText input = new EditText(DashboardActivity.this);
+        EditText input = new EditText(DashboardActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -264,9 +323,27 @@ public class DashboardActivity extends AppCompatActivity {
                     if(input.getText().toString().matches("")){
                         dialog.cancel();
                     } else {
-                        phoneT.setText(input.getText().toString());
+                        String value = input.getText().toString();
+                        HashMap<String,Object> result = new HashMap<>();
+                        result.put(key,value);
+                        databaseReference.child(user.getUid()).updateChildren(result)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(DashboardActivity.this,"Phone Updated...",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(DashboardActivity.this,"ERROR OCCURRED...",Toast.LENGTH_SHORT).show();
+
+
+                                    }
+                                });
                     }
-        });
+                });
         alertDialog.setNegativeButton("NO",
                 (dialog, which) -> dialog.cancel());
         alertDialog.show();
@@ -321,36 +398,179 @@ public class DashboardActivity extends AppCompatActivity {
         alertDialog.show();
     }
     ////////////////////////////////////////////////////////////////
-   /* private void pictureEdit(){
+   private void pictureEdit(){
+        profileOrCoverPhoto = "image";
+        showImagePicDialog();
+
+    }
+
+    private void showImagePicDialog() {
+        //show dialog containing options camera and gallery to pick the image
+        String options[] = {"Camera","Gallery"};
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
-        alertDialog.setTitle("Description");
-        alertDialog.setMessage("Enter a new description");
+        alertDialog.setTitle("Pick Image From");
+        alertDialog.setItems(options, new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                if(which == 0){
+                    //camera
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }
+                    else {
+                        pickFromCamera();
+                    }
 
-        final EditText input = new EditText(DashboardActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
-        alertDialog.setPositiveButton("YES",
-                (dialog, which) -> {
-                    if(input.getText().toString().matches("")){
-                        dialog.cancel();
-                    } else {
-                        avatarImage.setText(input.getText().toString());
 
+                }
+                else if(which == 1){
+                    //gallery
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }
+                    else{
+                        pickFromGallery();
+                    }
+
+                }
+
+            }
+        });
+        alertDialog.create().show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode){
+            case CAMERA_REQUEST_CODE:{
+                if (grantResults.length>0){
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if(cameraAccepted && writeStorageAccepted){
+                        //permission enabled
+                        pickFromCamera();
+                    }
+                    else{
+                        //permission denied
+                        Toast.makeText(DashboardActivity.this,"Please Enable Camera Permission",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+            break;
+            case STORAGE_REQUEST_CODE:{
+                if (grantResults.length>0){
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if(writeStorageAccepted){
+                        //permission enabled
+                        pickFromGallery();
+                    }
+                    else{
+                        //permission denied
+                        Toast.makeText(DashboardActivity.this,"Please Enable Storage Permission",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+            break;
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode == RESULT_OK){
+            if(requestCode == IMAGE_PICK_GALLERY_CODE ){
+                image_uri = data.getData();
+                uploadProfileCoverPhoto(image_uri);
+
+            }
+            if(requestCode == IMAGE_PICK_CAMERA_CODE){
+                uploadProfileCoverPhoto(image_uri);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadProfileCoverPhoto(Uri uri) {
+
+        String filePathAndName = storagePath+""+profileOrCoverPhoto+"_"+user.getUid();
+        StorageReference storageReference2nd = storageReference.child(filePathAndName);
+        storageReference2nd.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while(!uriTask.isSuccessful());
+                        Uri downloadUri = uriTask.getResult();
+
+                        if(uriTask.isSuccessful()){
+                            HashMap<String,Object> results = new HashMap<>();
+                            results.put(profileOrCoverPhoto,downloadUri.toString());
+
+                            databaseReference.child(user.getUid()).updateChildren(results)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(DashboardActivity.this,"Image Updated...",Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(DashboardActivity.this,"ERROR OCCURRED...",Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                    });
+                        }
+                        else{
+                            Toast.makeText(DashboardActivity.this,"Error Occurred",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(DashboardActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
-        alertDialog.setNegativeButton("NO",
-                (dialog, which) -> dialog.cancel());
-        alertDialog.show();
-    }*/
-    private void nameEdit(){
+
+
+
+    }
+
+    private void pickFromCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE,"Temp Pic");
+        values.put(MediaStore.Images.Media.DESCRIPTION,"Temp Description");
+
+        image_uri = DashboardActivity.this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
+        startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
+
+    }
+
+    private void pickFromGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent,IMAGE_PICK_GALLERY_CODE);
+
+    }
+
+    /////////////////////////////////////////////////////////////////////
+    private void nameEdit(String key){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
         alertDialog.setTitle("Name");
         alertDialog.setMessage("Enter a new Name");
 
-        final EditText input = new EditText(DashboardActivity.this);
+        EditText input = new EditText(DashboardActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -361,8 +581,26 @@ public class DashboardActivity extends AppCompatActivity {
                     if(input.getText().toString().matches("")){
                         dialog.cancel();
                     } else {
-                        nameT.setText(input.getText().toString());
+                        /*nameT.setText(input.getText().toString());*/
+                        String value = input.getText().toString();
+                        HashMap<String,Object> result = new HashMap<>();
+                        result.put(key,value);
+                        databaseReference.child(user.getUid()).updateChildren(result)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(DashboardActivity.this,"Name Updated...",Toast.LENGTH_SHORT).show();
 
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(DashboardActivity.this,"ERROR OCCURRED...",Toast.LENGTH_SHORT).show();
+
+
+                                    }
+                                });
                     }
                 });
         alertDialog.setNegativeButton("NO",
