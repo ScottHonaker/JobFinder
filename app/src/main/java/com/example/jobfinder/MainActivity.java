@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         password = findViewById(R.id.passWord);
 
-
-
         register.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, RegisterActivity.class));});
 

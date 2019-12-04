@@ -56,7 +56,6 @@ public class ProfileActivity extends AppCompatActivity {
                     (dialog, which) -> {
                         userDesc.setText(input.getText().toString());
                     });
-
             alertDialog.setNegativeButton("NO",
                     (dialog, which) -> dialog.cancel());
             alertDialog.show();
@@ -70,8 +69,6 @@ public class ProfileActivity extends AppCompatActivity {
             checkUserStatus();
 
         });
-
-
     }
 
     private void checkUserStatus(){
